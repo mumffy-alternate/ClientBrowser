@@ -1,0 +1,10 @@
+{% extends 'shared/base.html' %}
+
+{% block content %}
+    <h1>User: {{ user.nickname }}{% if g.user.nickname == user.nickname %} (this is you!){% endif %}</h1>
+    <h2>E-mail: {{ user.email }}</h2>
+    <hr>
+    {% for post in posts %}
+        {% include 'sub/post.html' %}
+    {% endfor %}
+{% endblock %}

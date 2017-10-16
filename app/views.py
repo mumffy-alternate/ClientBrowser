@@ -81,3 +81,19 @@ def login_check(username, password):
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+@app.route('/user/<nickname>')
+@login_required
+def user(nickname):
+    user = User.query.filter_by(nickname=nickname).first()
+    if user == None:
+        flash ("User {0} not found".format(nickname))
+        return redirect(url_for('index'))
+
+    posts = [
+        {'author': user, 'body':"Test post 01" },
+        {'author': user, 'body':"Test post 02" },
+        {'author': user, 'body':"Test post 03" }
+    ]
+
+    return render_template('user.html', user=user, posts=posts)

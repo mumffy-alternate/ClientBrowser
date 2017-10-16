@@ -2,10 +2,6 @@
 {% block content %}
     <h1>Hi, {{ user.nickname }}!</h1>
     {% for post in posts %}
-    <div>
-        <p>{{ post.author.nickname }} says:</p>
-        <p>{{ post.body }}</p>
-    </div>
-    <hr/>
+    {% include 'sub/post.html' %}
     {% endfor %}
 {% endblock %}
