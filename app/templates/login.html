@@ -9,7 +9,14 @@
             {{ form.user_name(size=80) }}<br/>
             {% for error in form.user_name.errors %}
                 <span style="color: red;">[{{ error }}]</span>
-            {%  endfor %}
+            {% endfor %}
+        </p>
+        <p>
+            Password:<br/>
+            {{ form.password(size=80) }}<br/>
+            {% for error in form.password.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
         </p>
         <p>{{ form.remember_me }} keep me logged in</p>
         <p><input type="submit" value="Sign In" /></p>
