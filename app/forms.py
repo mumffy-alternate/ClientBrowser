@@ -24,7 +24,7 @@ class ProfileForm(FlaskForm):
         if self.email.data == self.original_email:
             return True
 
-        user = User.query.filter_by(email=self.email.data).first() # concurrency issue?
+        user = User.query.filter_by(email=self.email.data).first() # TODO concurrency issue?
         if user != None:
             self.email.errors.append("This e-mail address is already in use.  Please provide a different one.")
             return False
