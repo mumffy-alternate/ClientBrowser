@@ -1,14 +1,19 @@
+from datetime import datetime
 from flask import render_template, flash, redirect, session, url_for, request, g
 from flask_login import login_user, logout_user, current_user, login_required
 
 from app import app, db, lm
-from .forms import LoginForm
+from .forms import LoginForm, ProfileForm
 from .models import User
 
 
 @app.before_request
 def before_request():
     g.user = current_user
+    if g.user.is_authenticated:
+        g.user.last_seen = datetime.utcnow()
+        db.session.add(g.user)
+        db.session.commit()
 
 @app.route('/')
 @app.route('/index')
@@ -97,3 +102,19 @@ def user(nickname):
     ]
 
     return render_template('user.html', user=user, posts=posts)
+
+@app.route('/edit', methods=['GET', 'POST'])
+@login_required
+def profile_edit():
+    form = ProfileForm()
+    if form.validate_on_submit():
+        g.user.email = form.email.data
+        g.user.about_me = form.about_me.data
+        db.session.add(g.user)
+        db.session.commit()
+        flash("Your changes have been saved")
+        return redirect(url_for('profile_edit'))
+    else:
+        form.email.data = g.user.email
+        form.about_me.data = g.user.about_me
+    return render_template('profile.html', form=form)

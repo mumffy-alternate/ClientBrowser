@@ -1,8 +1,11 @@
 {% extends 'shared/base.html' %}
 
 {% block content %}
-    <h1>User: {{ user.nickname }}{% if g.user.nickname == user.nickname %} (this is you!){% endif %}</h1>
+    <h1>User: {{ user.nickname }}{% if g.user.id == user.id %} (this is you!){% endif %}</h1>
     <h2>E-mail: {{ user.email }}</h2>
+    {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+    {% if g.user.id == user.id %}<p><a href="{{ url_for('profile_edit') }}">Edit</a></p>{% endif %}
+    {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
     <hr>
     {% for post in posts %}
         {% include 'sub/post.html' %}
