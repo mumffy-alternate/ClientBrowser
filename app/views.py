@@ -69,6 +69,8 @@ def login_check(username, password):
     if user is None:
         flash("{0} is not a registered user".format(username))
         return redirect(url_for('login'))
+    else:
+        user.follow_self_if_not_already()
 
     if password != "secret":
         flash("Password incorrect")

@@ -1,4 +1,4 @@
-from encodings import unicode_escape
+from sqlalchemy import select
 
 from app import db
 
@@ -29,6 +29,12 @@ class User(db.Model):
             self.followed.append(user)
             return self
 
+    def follow_self_if_not_already(self):
+        if not self.is_following_self():
+            self.follow(self)
+            db.session.add(self)
+            db.session.commit()
+
     def unfollow(self, user):
         if self.is_following(user):
             self.followed.remove(user)
@@ -42,6 +48,15 @@ class User(db.Model):
             .join(followers, (followers.c.followed_id == Post.user_id))\
             .filter(followers.c.follower_id == self.id)\
             .order_by(Post.timestamp.desc())
+
+    def is_following_self(self):
+        query = select([followers.c.follower_id])\
+            .where(followers.c.followed_id == self.id)\
+            .where(followers.c.follower_id == self.id)
+        results = db.session.execute(query).fetchall()
+        if len(results) == 1:
+            return True
+        return False
 
     @property
     def is_authenticated(self): # misleading name? means this User is *allowed* to authenticate?

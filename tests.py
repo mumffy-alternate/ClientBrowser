@@ -184,5 +184,13 @@ class BasicTests(unittest.TestCase):
         self.assertItemsEqual(f3, [p3, p4, p3a, p3b])
         self.assertItemsEqual(f4, [p4])
 
+    def test_following_self_check(self):
+        # TODO write me!
+        pass
+
+    def test_follow_self_if_not_already(self):
+        # TODO write me!
+        pass
+
 if __name__ == '__main__':
     unittest.main()
