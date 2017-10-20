@@ -58,6 +58,10 @@ class User(db.Model):
             return True
         return False
 
+    @classmethod
+    def get_by_nickname(cls, nickname):
+        return cls.query.filter_by(nickname=nickname).first()
+
     @property
     def is_authenticated(self): # misleading name? means this User is *allowed* to authenticate?
         return True

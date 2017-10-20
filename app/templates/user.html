@@ -4,8 +4,16 @@
     <h1>User: {{ user.nickname }}{% if g.user.id == user.id %} (this is you!){% endif %}</h1>
     <h2>E-mail: {{ user.email }}</h2>
     {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
-    {% if g.user.id == user.id %}<p><a href="{{ url_for('profile_edit') }}">Edit</a></p>{% endif %}
     {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
+    <p>{{ user.followers.count() - 1 }} followers |
+        {% if g.user.id == user.id %}
+            <a href="{{ url_for('profile_edit') }}">Edit</a>
+        {% elif not g.user.is_following(user) %}
+            <a href="{{ url_for('follow', nickname=user.nickname) }}">Follow</a>
+        {% else %}
+            <a href="{{ url_for('unfollow', nickname=user.nickname) }}">Unfollow</a>
+        {% endif %}
+    </p>
     <hr>
     {% for post in posts %}
         {% include 'sub/post.html' %}

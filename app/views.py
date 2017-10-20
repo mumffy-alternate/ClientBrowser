@@ -129,3 +129,37 @@ def not_found_error(error):
 def internal_error(error):
     db.session.rollback()
     return render_template('error/500.html'), 500
+
+@app.route('/follow/<nickname>')
+@login_required
+def follow(nickname):
+    user = User.get_by_nickname(nickname)
+    if user is None:
+        flash("User {0} not found.".format(nickname))
+        return redirect(url_for('index'))
+    if user == g.user:
+        flash("You can't follow yourself!")
+        return redirect(url_for('index'))
+
+    u = g.user.follow(user)
+    db.session.add(u)
+    db.session.commit()
+    flash("You are now following {0}".format(nickname))
+    return redirect(url_for('user', nickname=nickname))
+
+@app.route('/unfollow/<nickname>')
+@login_required
+def unfollow(nickname):
+    user = User.get_by_nickname(nickname)
+    if user is None:
+        flash("User {0} not found.".format(nickname))
+        return redirect(url_for('index'))
+    if user == g.user:
+        flash("You can't unfollow yourself!")
+        return redirect(url_for('index'))
+
+    u = g.user.unfollow(user)
+    db.session.add(u)
+    db.session.commit()
+    flash("You have stopped following {0}".format(nickname))
+    return redirect(url_for('user', nickname=nickname))
