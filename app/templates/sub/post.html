@@ -3,6 +3,9 @@
         <td>
             <i>{{ post.author.nickname }} says:</i><br/>
             {{ post.body }}
+            <p>
+                <i>{{ post.timestamp.strftime("%c") }}</i>
+            </p>
         </td>
     </tr>
 </table>

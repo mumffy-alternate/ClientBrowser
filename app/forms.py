@@ -30,3 +30,6 @@ class ProfileForm(FlaskForm):
             return False
 
         return True
+
+class PostForm(FlaskForm):
+    post = StringField('post', validators=[DataRequired()])
