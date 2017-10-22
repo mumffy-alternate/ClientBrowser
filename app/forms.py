@@ -9,6 +9,22 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('remember_me', default=False)
     password =  PasswordField('password')
 
+    def validate(self):
+        if not FlaskForm.validate(self):
+            return False
+
+        user = User.query.filter_by(nickname=self.user_name.data).first()
+
+        if user is None:
+            self.user_name.errors.append("{0} is not a registered user".format(self.user_name.data))
+            return False
+
+        if self.password.data != "secret":
+            self.password.errors.append("Password incorrect")
+            return False
+
+        return True
+
 class ProfileForm(FlaskForm):
     email = StringField('email', validators=[Email()])
     about_me = TextAreaField('about_me', validators=[Length(min=0, max=140)])
