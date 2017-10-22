@@ -1,5 +1,11 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <link href="https://maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet" media="screen">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     {% if title %}
     <title>{{ title }} - microblog</title>
     {% else %}
@@ -7,25 +13,34 @@
     {% endif %}
 </head>
 <body>
-    <div>
-        Site: <a href="{{ url_for('index') }}">Home</a>
-        {% if g.user.is_authenticated %}
-            | <a href="{{ url_for('user', nickname=g.user.nickname) }}">Your Profile</a>
-            | <a href="{{ url_for('logout') }}">Logout</a>
-        {% endif %}
+    <div class="container">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand" href="/">test site</a>
+                <ul class="nav">
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    {% if g.user.is_authenticated %}
+                        <li><a href="{{ url_for('user', nickname=g.user.nickname) }}">Your Profile</a></li>
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% endif %}
+                </ul>
+                <div class="nav-collapse collapse">
+                    {% if g.user.is_authenticated %}
+                        <p class="navbar-search pull-right">TODO: FULL TEXT SEARCH</p>
+                    {%  endif %}
+                </div>
+            </div>
+        </div>
     </div>
-    <hr/>
-
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-
-    {% block content %}{% endblock %}
+    <div class="row">
+        <div class="span12">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
 </body>
 </html>
