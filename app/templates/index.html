@@ -1,3 +1,4 @@
+{% from 'macro/post_paginator.html' import post_paginator as paginator %}
 {% extends "shared/base.html" %}
 
 {% block content %}
@@ -23,7 +24,9 @@
         </table>
     </form>
 
-    {% for post in posts %}
-    {% include 'sub/post.html' %}
+    <!-- posts is a Paginate instance -->
+    {% for post in posts.items %}
+        {% include 'sub/post.html' %}
     {% endfor %}
+    {{ paginator('index', posts) }}
 {% endblock %}

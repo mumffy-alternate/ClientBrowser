@@ -1,0 +1,14 @@
+{%  macro post_paginator(view, posts, kwargs={}) %}
+<!-- posts is a Paginate instance -->
+{% if posts.has_prev %}
+    <a href="{{ url_for(view, page=posts.prev_num, **kwargs) }}">&lt;&lt; Newer Posts</a>
+{% else %}
+    &lt;&lt; Newer Posts
+{% endif %}
+ |
+{% if posts.has_next %}
+    <a href="{{ url_for(view, page=posts.next_num, **kwargs) }}">Older Posts &gt;&gt;</a>
+{% else %}
+    Older Posts &gt;&gt;
+{% endif %}
+{% endmacro %}

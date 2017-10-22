@@ -13,3 +13,5 @@ MAIL_USERNAME = None
 MAIL_PASSWORD = None
 
 ADMINS = ['you@example.com']
+
+POSTS_PER_PAGE = 3

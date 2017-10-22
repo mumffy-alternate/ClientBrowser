@@ -3,6 +3,7 @@ from flask import render_template, flash, redirect, session, url_for, request, g
 from flask_login import login_user, logout_user, current_user, login_required
 
 from app import app, db, lm
+from config import POSTS_PER_PAGE
 from .forms import LoginForm, ProfileForm, PostForm
 from .models import User, Post
 
@@ -17,8 +18,9 @@ def before_request():
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
+@app.route('/index/<int:page>', methods=['GET', 'POST'])
 @login_required
-def index():
+def index(page=1):
     user = g.user
 
     form = PostForm()
@@ -29,23 +31,8 @@ def index():
         flash("Your post is now live!")
         return redirect(url_for('index'))
 
-    posts = user.get_followed_posts().all()
+    posts = user.get_followed_posts().paginate(page, POSTS_PER_PAGE, False)
     return render_template('index.html', title='Home', user=user, posts=posts, form=form)
-
-@app.route('/windex')
-def windex():
-    user = {'nickname': 'beepee'}  # fake user
-    posts = [
-        {
-            'author': {'nickname': 'John'},
-            'body': 'Bypassed day in Portland!'
-        },
-        {
-            'author': {'nickname': 'Susan'},
-            'body': 'The Bypassed movie was so cool!'
-        }
-    ]
-    return render_template('index.html', title='bypassed login', user=user, posts=posts)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -90,19 +77,15 @@ def logout():
     return redirect(url_for('index'))
 
 @app.route('/user/<nickname>')
+@app.route('/user/<nickname>/<int:page>')
 @login_required
-def user(nickname):
+def user(nickname, page=1):
     user = User.query.filter_by(nickname=nickname).first()
     if user == None:
         flash ("User {0} not found".format(nickname))
         return redirect(url_for('index'))
 
-    posts = [
-        {'author': user, 'body':"Test post 01", 'timestamp':datetime.utcnow()},
-        {'author': user, 'body':"Test post 02", 'timestamp':datetime.utcnow()},
-        {'author': user, 'body':"Test post 03", 'timestamp':datetime.utcnow()}
-    ]
-
+    posts = user.posts.order_by(Post.timestamp.desc()).paginate(page, POSTS_PER_PAGE, False)
     return render_template('user.html', user=user, posts=posts)
 
 @app.route('/edit', methods=['GET', 'POST'])
