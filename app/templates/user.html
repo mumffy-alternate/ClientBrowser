@@ -2,20 +2,27 @@
 {% extends 'shared/base.html' %}
 
 {% block content %}
-    <h1>User: {{ user.nickname }}{% if g.user.id == user.id %} (this is you!){% endif %}</h1>
-    <h2>E-mail: {{ user.email }}</h2>
-    {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
-    {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
-    <p>{{ user.followers.count() - 1 }} followers |
-        {% if g.user.id == user.id %}
-            <a href="{{ url_for('profile_edit') }}">Edit</a>
-        {% elif not g.user.is_following(user) %}
-            <a href="{{ url_for('follow', nickname=user.nickname) }}">Follow</a>
-        {% else %}
-            <a href="{{ url_for('unfollow', nickname=user.nickname) }}">Unfollow</a>
-        {% endif %}
-    </p>
-    <hr>
+    {% include 'shared/flash.html' %}
+    <div class="well well-large">
+        <div class="pull-right">
+            <img class="img-polaroid" height="140" width="140"
+                 src="https://avatars1.githubusercontent.com/u/25466405?v=4"/>
+        </div>
+        <h1>User: {{ user.nickname }}</h1>{% if g.user.id == user.id %} (this is you!){% endif %}
+        <h3>E-mail: {{ user.email }}</h3>
+        {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+        {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
+        <p>Followers: {{ user.followers.count() - 1 }} | Following: {{ user.followed.count() }} |
+            {% if g.user.id == user.id %}
+                <a href="{{ url_for('profile_edit') }}">Edit your profile</a>
+            {% elif not g.user.is_following(user) %}
+                <a href="{{ url_for('follow', nickname=user.nickname) }}">Follow</a>
+            {% else %}
+                <a href="{{ url_for('unfollow', nickname=user.nickname) }}">Unfollow</a>
+            {% endif %}
+        </p>
+    </div>
+
     {% for post in posts.items %}
         {% include 'sub/post.html' %}
     {% endfor %}
