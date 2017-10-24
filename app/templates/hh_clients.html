@@ -1,6 +1,43 @@
 {% extends 'shared/hh_base.html' %}
 
 {% block content %}
+
+    <form class="form-horizontal">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            <div class="row col-sm-12">
+                <div class="col-sm-3">
+                    <label for="first_name" class="control-label">First Name</label>
+                    {{ form.first_name(maxlength=255, class="form-control") }}
+                </div>
+                <div class="col-sm-3">
+                    <label for="last_name" class="control-label">Last Name</label>
+                    {{ form.last_name(maxlength=255, class="form-control") }}
+                </div>
+                <div class="col-sm-offset-3 col-sm-3">
+                    <label for="birthdate" class="control-label">Birthdate</label>
+                    {{ form.birthdate(class="form-control") }}
+{#                    {{ form.birthdate(class="form-control") }}#}
+                </div>
+            </div>
+            <div class="row col-sm-12">
+                <div class="col-sm-6">
+                    <label for="address_line1" class="control-label">Address (Line 1)</label>
+                    {{ form.address_line1(maxlength=255, class="form-control") }}
+                </div>
+                <div class="col-sm-6">
+                    <label for="address_line1" class="control-label">Address (Line 2)</label>
+                    {{ form.address_line2(maxlength=255, class="form-control") }}
+                </div>
+            </div>
+            <div class="row">
+
+            </div>
+        </div>
+
+    </form>
+
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in nunc in turpis viverra fermentum. Aliquam blandit quam velit, scelerisque tempor nisi accumsan vitae. In vel urna ultricies, varius sapien ut, tincidunt purus. Vestibulum mattis facilisis magna sit amet pulvinar. Donec felis diam, luctus eget interdum vitae, accumsan vitae elit. In porta ex vel erat molestie placerat. Proin laoreet elit a pulvinar faucibus.</p>
     <p>Sed eget purus ex. In hac habitasse platea dictumst. Suspendisse ultricies est non dolor finibus, ac laoreet eros faucibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed sed dolor enim. Nam ut sem id velit suscipit molestie vitae at tellus. Curabitur non metus sit amet nibh dictum pulvinar. Nam ullamcorper dolor convallis nibh laoreet sagittis non et sem. Nam ullamcorper libero vel leo consectetur convallis. Integer sagittis auctor enim, in eleifend velit pharetra vel. Maecenas ligula quam, aliquam eget purus et, pretium sagittis justo. Phasellus pharetra nulla et ex tincidunt, a viverra orci venenatis. Nunc sit amet sem vulputate, pellentesque ex commodo, dictum erat. Praesent blandit lacus vel ante dignissim fermentum. Proin aliquam turpis at enim accumsan tempus. Maecenas efficitur auctor lorem, nec elementum ipsum feugiat in.</p>
     <p>Aenean dapibus, lorem eget sollicitudin iaculis, lorem diam porttitor leo, sed convallis lacus tortor in elit. Nullam rhoncus a nisi ac posuere. Quisque posuere est blandit nisl maximus pulvinar. Vestibulum posuere ex odio, a consectetur justo auctor quis. Curabitur eget vestibulum tortor. Suspendisse ac commodo erat. Cras laoreet risus ac lorem aliquet, eget aliquet ipsum lobortis. Nulla id dictum arcu. In ut dolor non elit mattis elementum. Aliquam turpis massa, accumsan blandit mollis ut, placerat at felis. Curabitur at augue nunc. Suspendisse sed turpis id risus rutrum tempus. Proin sit amet purus pellentesque, viverra nulla eget, sodales ex. Aliquam fringilla ex vel tortor viverra condimentum. Aliquam eget turpis congue, faucibus felis nec, facilisis augue. Curabitur consectetur augue ut tellus vehicula, sed scelerisque ante ultricies.</p>
