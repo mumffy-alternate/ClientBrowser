@@ -5,12 +5,21 @@ from migrate import *
 from migrate.changeset import schema
 pre_meta = MetaData()
 post_meta = MetaData()
-user = Table('user', post_meta,
-    Column('id', Integer, primary_key=True, nullable=False),
-    Column('nickname', String(length=64)),
-    Column('email', String(length=120)),
-    Column('about_me', String(length=140)),
-    Column('last_seen', DateTime),
+person = Table('person', pre_meta,
+    Column('id', INTEGER, primary_key=True, nullable=False),
+    Column('first_name', VARCHAR(length=255), nullable=False),
+    Column('last_name', VARCHAR(length=255), nullable=False),
+    Column('address_line1', VARCHAR(length=255)),
+    Column('address_line2', VARCHAR(length=255)),
+    Column('address_city', VARCHAR(length=255)),
+    Column('address_state', VARCHAR(length=2)),
+    Column('address_postal_code', VARCHAR(length=30)),
+    Column('address_country', VARCHAR(length=3)),
+    Column('birthdate', DATETIME),
+    Column('sex', VARCHAR(length=15)),
+    Column('case_id', INTEGER),
+    Column('role_id', INTEGER),
+    Column('role_comment', VARCHAR(length=127)),
 )
 
 
@@ -19,13 +28,11 @@ def upgrade(migrate_engine):
     # migrate_engine to your metadata
     pre_meta.bind = migrate_engine
     post_meta.bind = migrate_engine
-    post_meta.tables['user'].columns['about_me'].create()
-    post_meta.tables['user'].columns['last_seen'].create()
+    pre_meta.tables['person'].columns['role_id'].drop()
 
 
 def downgrade(migrate_engine):
     # Operations to reverse the above upgrade go here.
     pre_meta.bind = migrate_engine
     post_meta.bind = migrate_engine
-    post_meta.tables['user'].columns['about_me'].drop()
-    post_meta.tables['user'].columns['last_seen'].drop()
+    pre_meta.tables['person'].columns['role_id'].create()

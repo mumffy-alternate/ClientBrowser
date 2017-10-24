@@ -5,17 +5,12 @@ from migrate import *
 from migrate.changeset import schema
 pre_meta = MetaData()
 post_meta = MetaData()
-child = Table('child', post_meta,
+phone_log_entry = Table('phone_log_entry', post_meta,
     Column('id', Integer, primary_key=True, nullable=False),
-    Column('name', String(length=20)),
-    Column('school_name', String(length=20)),
-    Column('parent_id', Integer),
-)
-
-parent = Table('parent', post_meta,
-    Column('id', Integer, primary_key=True, nullable=False),
-    Column('name', String(length=20)),
-    Column('job_name', String(length=20)),
+    Column('timestamp', DateTime, nullable=False),
+    Column('content', Text),
+    Column('caller_id', Integer),
+    Column('case_id', Integer, nullable=False),
 )
 
 
@@ -24,13 +19,11 @@ def upgrade(migrate_engine):
     # migrate_engine to your metadata
     pre_meta.bind = migrate_engine
     post_meta.bind = migrate_engine
-    post_meta.tables['child'].create()
-    post_meta.tables['parent'].create()
+    post_meta.tables['phone_log_entry'].create()
 
 
 def downgrade(migrate_engine):
     # Operations to reverse the above upgrade go here.
     pre_meta.bind = migrate_engine
     post_meta.bind = migrate_engine
-    post_meta.tables['child'].drop()
-    post_meta.tables['parent'].drop()
+    post_meta.tables['phone_log_entry'].drop()
