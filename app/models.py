@@ -91,3 +91,47 @@ class Post(db.Model):
 
     def __repr__(self):
         return '<Post {0}>'.format(self.body)
+
+
+
+class Case(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    date_opened = db.Column(db.DateTime)
+    date_closed = db.Column(db.DateTime)
+    case_name = db.Column(db.String(255), unique=True)
+    court_case_number = db.Column(db.String(255))
+    clients = db.relationship('Person', back_populates='case', lazy='dynamic')
+    phone_logs = db.relation('PhoneLogEntry', back_populates='case', lazy='dynamic')
+
+class Person(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    first_name = db.Column(db.String(255), nullable=False)
+    last_name = db.Column(db.String(255), nullable=False)
+    address_line1 = db.Column(db.String(255))
+    address_line2 = db.Column(db.String(255))
+    address_city = db.Column(db.String(255))
+    address_state = db.Column(db.String(2))
+    address_postal_code = db.Column(db.String(30))
+    address_country = db.Column(db.String(3))
+    birthdate = db.Column(db.DateTime)
+    sex = db.Column(db.String(15)) # TODO change to FK or something
+    case_id = db.Column(db.Integer, db.ForeignKey('case.id'))
+    case = db.relationship('Case', back_populates='clients') # TODO can one Person be invovled in multiple cases?  i.e. many-to-many?
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
+    role = db.relationship('Role', back_populates='people')
+    role_comment = db.Column(db.String(127))
+
+class Role(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    description = db.Column(db.String(127), unique=True)
+    short_name = db.Column(db.String(127), unique=True, nullable=False)
+    people = db.relationship('Person', back_populates='role', lazy='dynamic')
+
+class PhoneLogEntry(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    timestamp = db.Column(db.DateTime, nullable=False)
+    content = db.Column(db.Text)
+    caller_id = db.Column(db.Integer, db.ForeignKey('person.id'))
+    caller = db.relationship('Person')
+    case_id = db.Column(db.Integer, db.ForeignKey('case.id'), nullable=False)
+    case = db.relationship('Case', back_populates='phone_logs')
