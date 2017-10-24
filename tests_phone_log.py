@@ -38,11 +38,10 @@ class PhoneLogTests(unittest.TestCase):
         log2 = PhoneLogEntry(timestamp=utcnow+timedelta(minutes=02), case=case, content="hello 02", caller=a)
         log3 = PhoneLogEntry(timestamp=utcnow+timedelta(minutes=03), case=case, content="hello 03", caller=c)
         log4 = PhoneLogEntry(timestamp=utcnow+timedelta(minutes=04), case=case, content="hello 04", caller=a)
-
         self.update_db(log1)
         self.update_db(log2)
         self.update_db(log3)
-        pass
+        self.update_db(log4)
 
     def update_db(self, entity):
         db.session.add(entity)
@@ -55,10 +54,10 @@ class PhoneLogTests(unittest.TestCase):
         self.assertItemsEqual(client_first_names, ['Andrew', 'Bonnie', 'Clyde'])
 
         self.assertEquals(self.case.phone_logs.count(), 4)
-        logs = self.case.phone_logs.filter_by(caller=self.people['a']).all()
-        self.assertEquals(len(logs), 3)
+        filtered_logs = self.case.phone_logs.filter_by(caller=self.people['a']).all()
+        self.assertEquals(len(filtered_logs), 3)
 
-        log_contents = [l.content for l in logs]
+        log_contents = [l.content for l in filtered_logs]
         self.assertItemsEqual(log_contents, ['hello 01', 'hello 02', 'hello 04'])
 
 
