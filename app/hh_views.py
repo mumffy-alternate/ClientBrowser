@@ -48,3 +48,14 @@ def cases(case_name_front=None, case_name_back=None):
 
     cases = Case.query.all()
     return render_template('hh_cases.html', cases=cases, form=form)
+
+@app.route('/hh/cases/<case_name_front>/<case_name_back>', methods=['GET', 'POST'])
+def case_by_name(case_name_front=None, case_name_back=None):
+    if case_name_front != None and case_name_back != None:
+        case_name = case_name_front + '/' + case_name_back
+        case = Case.query.filter_by(case_name=case_name).first()
+        if case == None:
+            flash("Case [{0}] was not found.".format(case_name), 'warning')
+            return redirect(url_for('cases'))
+
+        return render_template('specific_case.html', case=case)
