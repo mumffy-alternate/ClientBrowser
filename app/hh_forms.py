@@ -14,9 +14,9 @@ class ClientForm(FlaskForm):
     address_state = StringField('address_state', validators=[Length(max=2)])
     address_postal_code = StringField('address_postal_code', validators=[Length(max=30)])
     address_country = StringField('address_country', validators=[Length(max=3)])
-    birthdate = DateField('birthdate')
+    birthdate = StringField('birthdate')
     sex = StringField('sex', validators=[Length(max=15)])
     # case_id = StringField
-    role_id = SelectField('rold_id')
+    # role_id = SelectField('rold_id')
     role_comment = StringField('role_comment', validators=[Length(max=127)])
 
