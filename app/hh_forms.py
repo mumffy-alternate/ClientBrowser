@@ -20,3 +20,18 @@ class ClientForm(FlaskForm):
     # role_id = SelectField('rold_id')
     role_comment = StringField('role_comment', validators=[Length(max=127)])
 
+class CaseForm(FlaskForm):
+    date_opened = StringField('date_opened')
+    date_closed = StringField('date_closed')
+    case_name = StringField('case_name', validators=[Length(2, 255), DataRequired()])
+    court_case_number = StringField('court_case_number', validators=[Length(max=255)])
+
+    def validate(self):
+        if not FlaskForm.validate(self):
+            return False
+
+        if str(self.case_name).find('/') == -1:
+            self.case_name.errors.append("Case Name must contain a slash, for example \"Eggplant/Grapefruit\"")
+            return False
+
+        return True
