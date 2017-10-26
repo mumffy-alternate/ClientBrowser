@@ -58,5 +58,20 @@ def case_by_name(case_name_front=None, case_name_back=None):
         if case == None:
             flash("Case [{0}] was not found.".format(case_name), 'warning')
             return redirect(url_for('cases'))
+        clients = case.clients.all()
+        logs = case.phone_logs.all()
 
-        return render_template('specific_case.html', case=case)
+        form = CaseForm()
+        if form.validate_on_submit():
+            c = case
+            c.date_opened = datetime.strptime(form.date_opened.data, '%Y-%m-%d') if form.date_opened.data else None
+            c.date_closed = datetime.strptime(form.date_closed.data, '%Y-%m-%d') if form.date_closed.data else None
+            c.case_name = form.case_name.data
+            c.court_case_number = form.court_case_number.data
+            db.session.add(c)
+            db.session.commit()
+            flash("Case [{0}] has been updated.".format(c.case_name), "success") # TODO display which exact fields were changed and how
+            return redirect(url_for('case_by_name', case_name_front=case_name_front, case_name_back=case_name_back))
+        else:
+            form = CaseForm(case)
+            return render_template('specific_case.html', form=form, clients=clients, logs=logs)

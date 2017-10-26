@@ -26,6 +26,14 @@ class CaseForm(FlaskForm):
     case_name = StringField('case_name', validators=[Length(2, 255), DataRequired()])
     court_case_number = StringField('court_case_number', validators=[Length(max=255)])
 
+    def __init__(self, case=None, *args, **kwargs):
+        super(CaseForm, self).__init__(*args, **kwargs)
+        if case != None:
+            self.case_name.data = case.case_name
+            self.date_opened.data = case.date_opened
+            self.date_closed.data = case.date_closed
+            self.court_case_number.data = case.court_case_number
+
     def validate(self):
         if not FlaskForm.validate(self):
             return False

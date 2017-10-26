@@ -1,10 +1,86 @@
 {% extends 'shared/hh_base.html' %}
 
 {% block content %}
-{% include 'shared/hh_flash.html' %}
+    {% include 'shared/hh_flash.html' %}
+    <h1>Case Details</h1>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form class="" action="" method="post" name="new-client" id="caseform">
+                {{ form.hidden_tag() }}
+                <fieldset disabled>
+                    <div class="">
+                            <div class="col-sm-6">
+                                <div class="form-group{% if form.case_name.errors %} has-error{% endif %}">
+                                    <label for="case_name" class="control-label">Case Name</label>
+                                    {{ form.case_name(maxlength=255, class="form-control") }}
+                                    {% for error in form.case_name.errors %}
+                                        <span class="help-block">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="court_case_number" class="control-label">Court Case Number</label>
+                                    {{ form.court_case_number(maxlength=255, class="form-control") }}
+                                </div>
+                            </div>
+                    </div>
+                    <div class="">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="date_opened" class="control-label">Date Opened</label>
+                                {{ form.date_opened(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="col-sm-offset-3 col-sm-3">
+                            <div class="form-group">
+                                <label for="date_closed" class="control-label">Date Closed</label>
+                                {{ form.date_closed(class="form-control") }}
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
 
-<div class="well col-xs-12">
-    <h1>{{ case.case_name }}</h1>
-</div>
+                <div class="col-sm-12" style="margin-top: 3%">
+                    <button type="button" class="btn btn-default" data-toggle="button" id="editformtoggle">
+                        <span class="glyphicon glyphicon-edit"></span>&nbsp;Edit Case Details
+                    </button>
+                    <button id='savebutton' type="submit" class="btn btn-default pull-right" disabled>Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
+    <h3>Clients Involved</h3>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            {% if not clients %}
+                There are currently no clients associated with this case.
+            {% else %}
+                <p>These are the clients:</p>
+                {% for client in clients %}
+                    <p>{{ client.first_name+" "+client.last_name }}</p>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <h3>Phone Log</h3>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            {% if not logs %}
+                There are currently no phone log entries associated with this case.
+            {% else %}
+                <p>Phone log entries:</p>
+                {% for log in logs %}
+                    <p><b>{{ log.timestamp }}</b></p>
+                    <p>{{ log.content }}</p>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer_scripts %}
+    <script src="{{ url_for('static', filename='js/specific_case.js') }}"></script>
 {% endblock %}
