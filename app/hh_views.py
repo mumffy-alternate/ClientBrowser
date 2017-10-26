@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import render_template, flash, redirect, session, url_for, request, g
+from flask import render_template, redirect, session, url_for, request, g
 from flask_login import login_user, logout_user, current_user, login_required
 
 from app import app, db, lm
@@ -7,6 +7,7 @@ from config import POSTS_PER_PAGE
 from .forms import LoginForm, ProfileForm, PostForm
 from .models import Person, Case
 from .hh_forms import ClientForm, CaseForm
+from .hh_utilities import flash
 
 @app.route('/hh/clients', methods=['GET', 'POST'])
 def clients():
@@ -31,7 +32,7 @@ def clients():
     clients = Person.query.all()
     return render_template('hh_clients.html', clients=clients, form=form)
 
-@app.route('/hh/cases', methods=['GET', 'POST'])
+@app.route('/hh/cases/', methods=['GET', 'POST'])
 def cases(case_name_front=None, case_name_back=None):
     form = CaseForm()
     if form.validate_on_submit():
@@ -49,7 +50,7 @@ def cases(case_name_front=None, case_name_back=None):
     cases = Case.query.all()
     return render_template('hh_cases.html', cases=cases, form=form)
 
-@app.route('/hh/cases/<case_name_front>/<case_name_back>', methods=['GET', 'POST'])
+@app.route('/hh/cases/<case_name_front>/<case_name_back>/', methods=['GET', 'POST'])
 def case_by_name(case_name_front=None, case_name_back=None):
     if case_name_front != None and case_name_back != None:
         case_name = case_name_front + '/' + case_name_back
