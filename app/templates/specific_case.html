@@ -54,14 +54,40 @@
     <h3>Clients Involved</h3>
     <div class="panel panel-default">
         <div class="panel-body">
-            {% if not clients %}
-                There are currently no clients associated with this case.
-            {% else %}
-                <p>These are the clients:</p>
-                {% for client in clients %}
-                    <p>{{ client.first_name+" "+client.last_name }}</p>
-                {% endfor %}
-            {% endif %}
+            <div class="row">
+                <div class="col-sm-6">
+                    {% if not clients %}
+                        There are currently no clients associated with this case.
+                    {% else %}
+                        <p>These are the clients:</p>
+                        {% for client in clients %}
+                            <p>{{ client.first_name+" "+client.last_name }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="col-sm-3 pull-right">
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#clientAddModal"
+                        data-backdrop="static" data-keyboard=false>Add Client to this Case</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="clientAddModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                    <h4 class="modal-title">Select a Client</h4>
+                </div>
+                <div class="modal-body">
+                    body
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Add to this Case</button>
+                </div>
+            </div>
         </div>
     </div>
 
