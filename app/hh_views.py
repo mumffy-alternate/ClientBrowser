@@ -87,10 +87,19 @@ def get_clients():
     draw = request.args['draw']
     start = int(request.args['start'])
     page_length = int(request.args['length'])
+    query = request.args['search[value]']
+    is_regex = bool(request.args['search[regex]'])
 
     page_number = (start / page_length) + 1
-    people = Person.query.order_by('id').paginate(page_number, page_length, False).items
+    query_like = '%'+query+'%'
+
+    # people = Person.query.order_by('id').paginate(page_number, page_length, False).items
+    people = Person.query.filter((Person.first_name.like(query_like)) | (Person.last_name.like(query_like)))
+
     total_people_count = Person.query.count()
+    count_after_filter = people.count()
+
+    people = people.order_by('id').paginate(page_number, page_length, False).items
 
     data = []
     for person in people:
@@ -104,7 +113,7 @@ def get_clients():
     result = {
         "draw": draw,
         "recordsTotal": total_people_count,
-        "recordsFiltered": total_people_count,
+        "recordsFiltered": count_after_filter,
         "data": data
     }
     return json.dumps(result)
