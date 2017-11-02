@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 from flask import render_template, redirect, session, url_for, request, g, request
 from flask_login import login_user, logout_user, current_user, login_required
+from sqlalchemy import desc
 
 from app import app, db, lm
 from config import POSTS_PER_PAGE
@@ -90,16 +91,30 @@ def get_clients():
     query = request.args['search[value]']
     is_regex = bool(request.args['search[regex]'])
 
+    sort_column_number = int(request.args['order[0][column]'])
+    sort_column_direction = request.args['order[0][dir]']
+    sort_column_name = request.args['columns[{0}][data]'.format(sort_column_number)]
+    sort_column_allowed = bool(request.args['columns[{0}][orderable]'.format(sort_column_number)])
+
     page_number = (start / page_length) + 1
     query_like = '%'+query+'%'
 
     # people = Person.query.order_by('id').paginate(page_number, page_length, False).items
     people = Person.query.filter((Person.first_name.like(query_like)) | (Person.last_name.like(query_like)))
-
     total_people_count = Person.query.count()
     count_after_filter = people.count()
 
-    people = people.order_by('id').paginate(page_number, page_length, False).items
+    if sort_column_allowed:
+        sort_columns = {
+            "case_name" : "case.case_name"
+        }
+        sort_column = sort_columns[sort_column_name] if sort_column_name in sort_columns.keys() else sort_column_name
+
+        if(sort_column_direction == 'desc'):
+            people = people.order_by(desc(sort_column))
+        else:
+            people = people.order_by(sort_column)
+    people = people.paginate(page_number, page_length, False).items
 
     data = []
     for person in people:
