@@ -80,7 +80,36 @@ def case_by_name(case_name_front=None, case_name_back=None):
             return redirect(url_for('case_by_name', case_name_front=case_name_front, case_name_back=case_name_back))
         else:
             form = CaseForm(case)
-            return render_template('specific_case.html', form=form, clients=clients, logs=logs)
+            client_form = ClientForm()
+            return render_template('specific_case.html', form=form, clients=clients, logs=logs,
+                                   case_name_front=case_name_front, case_name_back=case_name_back,
+                                   client_form=client_form)
+
+
+@app.route('/hh/add_client_to_case/<case_name_front>/<case_name_back>/', methods=['POST'])
+def add_client_to_case(case_name_front=None, case_name_back=None):
+    if case_name_front != None and case_name_back != None:
+        case_name = case_name_front + '/' + case_name_back
+        case = Case.query.filter_by(case_name=case_name).first()
+        if case == None:
+            flash("Case [{0}] was not found.".format(case_name), 'warning')
+            return redirect(url_for('cases'))
+        clients = case.clients.all()
+        logs = case.phone_logs.all()
+        form = ClientForm()
+        if form.validate_on_submit():
+            p = Person()
+            p.first_name = form.first_name.data
+            p.last_name = form.last_name.data
+            case.clients.append(p)
+            db.session.add(p)
+            db.session.add(case)
+            db.session.commit()
+            flash("Client [{0}] has been added to this case [{1}].".format(p.first_name + " " + p.last_name, case.case_name))
+            return redirect(url_for('case_by_name', case_name_front=case_name_front, case_name_back=case_name_back))
+        else:
+            flash("Validation Errors:".format(form.errors), "error")
+            return redirect(url_for('case_by_name', case_name_front=case_name_front, case_name_back=case_name_back))
 
 
 @app.route('/api/table/clients')
@@ -97,7 +126,7 @@ def get_clients():
     sort_column_allowed = bool(request.args['columns[{0}][orderable]'.format(sort_column_number)])
 
     page_number = (start / page_length) + 1
-    query_like = '%'+query+'%'
+    query_like = '%' + query + '%'
 
     # people = Person.query.order_by('id').paginate(page_number, page_length, False).items
     people = Person.query.filter((Person.first_name.like(query_like)) | (Person.last_name.like(query_like)))
@@ -106,11 +135,11 @@ def get_clients():
 
     if sort_column_allowed:
         sort_columns = {
-            "case_name" : "case.case_name"
+            "case_name": "case.case_name"
         }
         sort_column = sort_columns[sort_column_name] if sort_column_name in sort_columns.keys() else sort_column_name
 
-        if(sort_column_direction == 'desc'):
+        if (sort_column_direction == 'desc'):
             people = people.order_by(desc(sort_column))
         else:
             people = people.order_by(sort_column)
