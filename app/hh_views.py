@@ -7,8 +7,8 @@ from sqlalchemy import desc
 from app import app, db, lm
 from config import POSTS_PER_PAGE
 from .forms import LoginForm, ProfileForm, PostForm
-from .models import Person, Case
-from .hh_forms import ClientForm, CaseForm
+from .models import Person, Case, PhoneLogEntry
+from .hh_forms import ClientForm, CaseForm, PhoneLogForm
 from .hh_utilities import flash
 
 
@@ -81,9 +81,10 @@ def case_by_name(case_name_front=None, case_name_back=None):
         else:
             form = CaseForm(case)
             client_form = ClientForm()
+            phonelog_form = PhoneLogForm()
             return render_template('specific_case.html', form=form, clients=clients, logs=logs,
                                    case_name_front=case_name_front, case_name_back=case_name_back,
-                                   client_form=client_form)
+                                   client_form=client_form, phonelog_form=phonelog_form)
 
 
 @app.route('/hh/add_client_to_case/<case_name_front>/<case_name_back>/', methods=['POST'])
@@ -110,6 +111,29 @@ def add_client_to_case(case_name_front=None, case_name_back=None):
         else:
             flash("Validation Errors:".format(form.errors), "error")
             return redirect(url_for('case_by_name', case_name_front=case_name_front, case_name_back=case_name_back))
+
+@app.route('/hh/add_phonelog_to_case/<case_name_front>/<case_name_back>/', methods=['POST'])
+def add_phonelog_to_case(case_name_front=None, case_name_back=None):
+    if case_name_front != None and case_name_back != None:
+        case_name = case_name_front + '/' + case_name_back
+        case = Case.query.filter_by(case_name=case_name).first()
+        if case == None:
+            flash("Case [{0}] was not found.".format(case_name), 'warning')
+            return redirect(url_for('cases'))
+        form = PhoneLogForm()
+        if form.validate_on_submit():
+            log_entry = PhoneLogEntry()
+            log_entry.timestamp = datetime.utcnow()
+            log_entry.content = form.content.data
+            log_entry.case = case
+            db.session.add(log_entry)
+            db.session.commit()
+            flash("Phone log entry for [{0}] has been added to this case [{1}].".format(log_entry.timestamp, case.case_name))
+            return redirect(url_for('case_by_name', case_name_front=case_name_front, case_name_back=case_name_back))
+        else:
+            flash("Validation Errors:".format(form.errors), "error")
+            return redirect(url_for('case_by_name', case_name_front=case_name_front, case_name_back=case_name_back))
+
 
 
 @app.route('/api/table/clients')

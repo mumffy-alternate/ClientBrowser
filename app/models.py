@@ -102,6 +102,10 @@ class Case(db.Model):
     court_case_number = db.Column(db.String(255))
     clients = db.relationship('Person', back_populates='case', lazy='dynamic')
     phone_logs = db.relation('PhoneLogEntry', back_populates='case', lazy='dynamic')
+    def get_name_front(self):
+        return str(self.case_name).split('/')[0]
+    def get_name_back(self):
+        return str(self.case_name).split('/')[1]
 
 class Person(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

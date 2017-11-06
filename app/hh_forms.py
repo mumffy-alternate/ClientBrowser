@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, PasswordField, TextAreaField, HiddenField, SelectField
+from wtforms import StringField, BooleanField, PasswordField, TextAreaField, HiddenField, SelectField, DateTimeField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Length, Email
 
 from app.models import User
+
 
 class ClientForm(FlaskForm):
     first_name = StringField('first_name', validators=[DataRequired(), Length(1, 255)])
@@ -19,6 +20,7 @@ class ClientForm(FlaskForm):
     # case_id = StringField
     # role_id = SelectField('rold_id')
     role_comment = StringField('role_comment', validators=[Length(max=127)])
+
 
 class CaseForm(FlaskForm):
     date_opened = StringField('date_opened')
@@ -43,3 +45,8 @@ class CaseForm(FlaskForm):
             return False
 
         return True
+
+class PhoneLogForm(FlaskForm):
+    logdate = StringField('logdate')
+    logtime = StringField('logtime')
+    content = TextAreaField('content')

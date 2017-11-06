@@ -59,7 +59,7 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3>Clients Involved</h3>
+            <h1>Clients Involved</h1>
         </div>
         <div class="panel-body">
             <div class="row">
@@ -67,7 +67,6 @@
                     {% if not clients %}
                         There are currently no clients associated with this case.
                     {% else %}
-                        <p>These are the clients:</p>
                         {% for client in clients %}
                             <p>{{ client.first_name+" "+client.last_name }}</p>
                         {% endfor %}
@@ -96,15 +95,15 @@
                           action="{{ url_for('add_client_to_case', case_name_front=case_name_front, case_name_back=case_name_back) }}">
                         {{ client_form.hidden_tag() }}
                         <div class="form-group">
-                            <div class="row col-sm-12">
-                                <div class="col-sm-6">
-                                    <label for="first_name" class="control_label">First Name</label>
-                                    {{ client_form.first_name(maxlength=255, class="form-control") }}
-                                </div>
-                                <div class="col-sm-6">
-                                    <label for="last_name" class="control_label">Last Name</label>
-                                    {{ client_form.last_name(maxlength=255, class="form-control") }}
-                                </div>
+                            <div class="col-sm-6">
+                                <label for="first_name" class="control_label">First Name</label>
+                                {{ client_form.first_name(maxlength=255, class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label for="last_name" class="control_label">Last Name</label>
+                                {{ client_form.last_name(maxlength=255, class="form-control") }}
                             </div>
                         </div>
                     </form>
@@ -118,20 +117,78 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3>Phone Log</h3>
+            <h1>Phone Log</h1>
         </div>
         <div class="panel-body">
-            {% if not logs %}
-                There are currently no phone log entries associated with this case.
-            {% else %}
-                <p>Phone log entries:</p>
-                {% for log in logs %}
-                    <p><b>{{ log.timestamp }}</b></p>
-                    <p>{{ log.content }}</p>
-                {% endfor %}
-            {% endif %}
+            <div class="row">
+                <div class="col-sm-3 center-block">
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#phonelogAddModal"
+                            data-backdrop="static" data-keyboard=false>Add Log Entry
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-offset-2 col-sm-8">
+                    {% if not logs %}
+                        There are currently no phone log entries associated with this case.
+                    {% else %}
+                        {% for log in logs %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    {{ log.timestamp }}
+                                </div>
+                                <div class="panel-body">
+                                    <p style="white-space: pre-wrap">{{ log.content }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+            </div>
         </div>
     </div>
+
+    <div class="modal fade" id="phonelogAddModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                    <h4 class="modal-title">Phone Log Entry</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="phonelogForm" method="post"
+                          action="{{ url_for('add_phonelog_to_case', case_name_front=case_name_front, case_name_back=case_name_back) }}">
+                        {{ client_form.hidden_tag() }}
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label for="logdate" class="control_label">Date</label>
+                                {{ phonelog_form.logdate(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <label for="logtime" class="control-label">Time</label>
+                                {{ phonelog_form.logtime(class="form-control") }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <label for="content" class="control-label">Content</label>
+                                {{ phonelog_form.content(class="form-control", style="white-space: pre-wrap") }}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button form="phonelogForm" type="submit" class="btn btn-primary">Add to this Case</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block footer_scripts %}
