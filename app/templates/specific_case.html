@@ -1,13 +1,22 @@
 {% extends 'shared/hh_base.html' %}
 
+{% block page_title %}
+    Case: {{ case_name_front }}/{{ case_name_back }}
+{% endblock %}
+
+{% block head_content %}
+    <script type="text/javascript">
+        var caseId = {{ case_id }};
+    </script>
+{% endblock %}
+
+
 {% block content %}
     {% include 'shared/hh_flash.html' %}
 
-    {% include 'shared/hh_table_demo.html' %}
-
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h1>Case Details</h1>
+            <h3>Case Details</h3>
         </div>
         <div class="panel-body">
             <form class="" action="" method="post" name="new-client" id="caseform">
@@ -57,10 +66,9 @@
         </div>
     </div>
 
+    {% include 'shared/hh_clients_by_case.html' %}
+
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <h1>Clients Involved</h1>
-        </div>
         <div class="panel-body">
             <div class="row">
                 <div class="col-sm-6">
@@ -117,7 +125,7 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h1>Phone Log</h1>
+            <h3>Phone Log</h3>
         </div>
         <div class="panel-body">
             <div class="row">
@@ -192,5 +200,5 @@
 {% endblock %}
 
 {% block footer_scripts %}
-    <script src="{{ url_for('static', filename='js/specific_case.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/specific_case_clients.js') }}"></script>
 {% endblock %}

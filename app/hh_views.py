@@ -35,7 +35,6 @@ def clients():
     clients = Person.query.all()
     return render_template('hh_clients.html', clients=clients, form=form)
 
-
 @app.route('/hh/cases/', methods=['GET', 'POST'])
 def cases(case_name_front=None, case_name_back=None):
     form = CaseForm()
@@ -54,7 +53,6 @@ def cases(case_name_front=None, case_name_back=None):
     cases = Case.query.all()
     return render_template('hh_cases.html', cases=cases, form=form)
 
-
 @app.route('/hh/cases/<case_name_front>/<case_name_back>/', methods=['GET', 'POST'])
 def case_by_name(case_name_front=None, case_name_back=None):
     if case_name_front != None and case_name_back != None:
@@ -64,7 +62,7 @@ def case_by_name(case_name_front=None, case_name_back=None):
             flash("Case [{0}] was not found.".format(case_name), 'warning')
             return redirect(url_for('cases'))
         clients = case.clients.all()
-        logs = case.phone_logs.all()
+        logs = case.phone_logs.order_by(desc(PhoneLogEntry.timestamp))
 
         form = CaseForm()
         if form.validate_on_submit():
@@ -82,10 +80,9 @@ def case_by_name(case_name_front=None, case_name_back=None):
             form = CaseForm(case)
             client_form = ClientForm()
             phonelog_form = PhoneLogForm()
-            return render_template('specific_case.html', form=form, clients=clients, logs=logs,
+            return render_template('specific_case.html', form=form, clients=clients, logs=logs, case_id=case.id,
                                    case_name_front=case_name_front, case_name_back=case_name_back,
                                    client_form=client_form, phonelog_form=phonelog_form)
-
 
 @app.route('/hh/add_client_to_case/<case_name_front>/<case_name_back>/', methods=['POST'])
 def add_client_to_case(case_name_front=None, case_name_back=None):
@@ -133,55 +130,3 @@ def add_phonelog_to_case(case_name_front=None, case_name_back=None):
         else:
             flash("Validation Errors:".format(form.errors), "error")
             return redirect(url_for('case_by_name', case_name_front=case_name_front, case_name_back=case_name_back))
-
-
-
-@app.route('/api/table/clients')
-def get_clients():
-    draw = request.args['draw']
-    start = int(request.args['start'])
-    page_length = int(request.args['length'])
-    query = request.args['search[value]']
-    is_regex = bool(request.args['search[regex]'])
-
-    sort_column_number = int(request.args['order[0][column]'])
-    sort_column_direction = request.args['order[0][dir]']
-    sort_column_name = request.args['columns[{0}][data]'.format(sort_column_number)]
-    sort_column_allowed = bool(request.args['columns[{0}][orderable]'.format(sort_column_number)])
-
-    page_number = (start / page_length) + 1
-    query_like = '%' + query + '%'
-
-    # people = Person.query.order_by('id').paginate(page_number, page_length, False).items
-    people = Person.query.filter((Person.first_name.like(query_like)) | (Person.last_name.like(query_like)))
-    total_people_count = Person.query.count()
-    count_after_filter = people.count()
-
-    if sort_column_allowed:
-        sort_columns = {
-            "case_name": "case.case_name"
-        }
-        sort_column = sort_columns[sort_column_name] if sort_column_name in sort_columns.keys() else sort_column_name
-
-        if (sort_column_direction == 'desc'):
-            people = people.order_by(desc(sort_column))
-        else:
-            people = people.order_by(sort_column)
-    people = people.paginate(page_number, page_length, False).items
-
-    data = []
-    for person in people:
-        item = {}
-        item['role'] = person.role.short_name if person.role else "(no defined role)"
-        item['first_name'] = person.first_name
-        item['last_name'] = person.last_name
-        item['case_name'] = person.case.case_name if person.case else "(missing case name)"
-        data.append(item)
-
-    result = {
-        "draw": draw,
-        "recordsTotal": total_people_count,
-        "recordsFiltered": count_after_filter,
-        "data": data
-    }
-    return json.dumps(result)

@@ -14,10 +14,13 @@
     <link rel="stylesheet" href="/static/cdn/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="/static/cdn//jquery.dataTables.css">
 
+    {% block head_content %}
+    {% endblock %}
+
     {% if title %}
         <title>{{ title }}</title>
     {% else %}
-        <title>Title Placeholder</title>
+        <title>{% block page_title %}{% endblock %}</title>
     {% endif %}
 </head>
 <body>

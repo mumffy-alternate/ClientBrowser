@@ -1,21 +1,14 @@
 $(document).ready(function () {
 
-    var ajaxUrl = "/api/table/clients/";
-    if (caseId !== undefined) {
-        ajaxUrl = "/api/table/case/" + caseId + "/clients/";
-    }
-
-    $("#exampleTable").DataTable({
-        "lengthMenu": [[2, 3, 5, -1], [2, 3, 5, "All"]],
-        "processing": true,
-        "serverSide": true,
-        "order": [[2, "desc"]],
-        "ajax": "/api/table/clients",
+    $("#clientsTable").DataTable({
+        "paging": false,
+        "searching": false,
+        "info": false,
+        "order": [[2, "asc"]],
         "columns": [
             {"data": "role", "orderable": false},
             {"data": "first_name"},
             {"data": "last_name"},
-            {"data": "case_name", "orderable": false},  //how to do server-side sorting with joins?
         ]
     });
     $("#date_opened").datepicker({dateFormat: 'yy-mm-dd'});

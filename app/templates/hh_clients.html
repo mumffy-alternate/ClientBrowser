@@ -1,67 +1,72 @@
 {% extends 'shared/hh_base.html' %}
 
 {% block content %}
-{% include 'shared/hh_flash.html' %}
+    {% include 'shared/hh_flash.html' %}
 
-<h1>Clients</h1>
-<div class="well col-xs-12">
-    <div class="row">
-        <p>
-            <button class="btn btn-default col-sm-offset-5 col-sm-2" type="button" data-toggle="collapse" data-target="#clientform">New Client</button>
-        </p>
-    </div>
-    <form class="form-horizontal collapse" action="" method="post" name="new-client" id="clientform">
-        {{ form.hidden_tag() }}
-
-        <div class="form-group">
-            <div class="row col-sm-12">
-                <div class="col-sm-3">
-                    <label for="first_name" class="control-label">First Name</label>
-                    {{ form.first_name(maxlength=255, class="form-control") }}
-                </div>
-                <div class="col-sm-3">
-                    <label for="last_name" class="control-label">Last Name</label>
-                    {{ form.last_name(maxlength=255, class="form-control") }}
-                </div>
-                <div class="col-sm-offset-3 col-sm-3">
-                    <label for="birthdate" class="control-label">Birthdate</label>
-                    {{ form.birthdate(class="form-control") }}
-{#                    {{ form.birthdate(class="form-control") }}#}
-                </div>
-            </div>
+    <h1>Clients</h1>
+    <div class="well col-xs-12">
+        <div class="row">
+            <p>
+                <button class="btn btn-default col-sm-offset-5 col-sm-2" type="button" data-toggle="collapse"
+                        data-target="#clientform">New Client
+                </button>
+            </p>
         </div>
-       <div class="form-group">
-            <div class="row col-sm-12">
-                <div class="col-sm-6">
-                    <label for="address_line1" class="control-label">Address (Line 1)</label>
-                    {{ form.address_line1(maxlength=255, class="form-control") }}
-                </div>
-                <div class="col-sm-6">
-                    <label for="address_line1" class="control-label">Address (Line 2)</label>
-                    {{ form.address_line2(maxlength=255, class="form-control") }}
+        <form class="form-horizontal collapse" action="" method="post" name="new-client" id="clientform">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                <div class="row col-sm-12">
+                    <div class="col-sm-3">
+                        <label for="first_name" class="control-label">First Name</label>
+                        {{ form.first_name(maxlength=255, class="form-control") }}
+                    </div>
+                    <div class="col-sm-3">
+                        <label for="last_name" class="control-label">Last Name</label>
+                        {{ form.last_name(maxlength=255, class="form-control") }}
+                    </div>
+                    <div class="col-sm-offset-3 col-sm-3">
+                        <label for="birthdate" class="control-label">Birthdate</label>
+                        {{ form.birthdate(class="form-control") }}
+                        {#                    {{ form.birthdate(class="form-control") }}#}
+                    </div>
                 </div>
             </div>
-       </div>
-        <div class="row" style="margin-top: 5%"></div>
-        <div class="form-group">
-            <div class="row col-sm-12">
-                <div class="col-sm-offset-10 col-sm-2">
-                    <button type="submit" class="btn btn-default">Add Client</button>
+            <div class="form-group">
+                <div class="row col-sm-12">
+                    <div class="col-sm-6">
+                        <label for="address_line1" class="control-label">Address (Line 1)</label>
+                        {{ form.address_line1(maxlength=255, class="form-control") }}
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="address_line1" class="control-label">Address (Line 2)</label>
+                        {{ form.address_line2(maxlength=255, class="form-control") }}
+                    </div>
                 </div>
             </div>
+            <div class="row" style="margin-top: 5%"></div>
+            <div class="form-group">
+                <div class="row col-sm-12">
+                    <div class="col-sm-offset-10 col-sm-2">
+                        <button type="submit" class="btn btn-default">Add Client</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div> <!-- well -->
+
+    {% for client in clients %}
+        <div>
+            <p>{{ client.first_name }} {{ client.last_name }}</p>
         </div>
+    {% endfor %}
 
-    </form>
-</div> <!-- well -->
-
-{% for client in clients %}
-    <div>
-        <p>{{ client.first_name }} {{ client.last_name }}</p>
-    </div>
-{% endfor %}
+    {% include 'shared/hh_table_demo.html' %}
 
 {% endblock %}
 
 {% block footer_scripts %}
-<script src="{{ url_for('static', filename='js/clients.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/clients.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/specific_case.js') }}"></script>
 {% endblock %}

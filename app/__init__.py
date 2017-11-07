@@ -14,7 +14,7 @@ lm = LoginManager()
 lm.init_app(app)
 lm.login_view = 'login'
 
-from app import views, models, hh_views   # needs to stay at bottom
+from app import views, models, hh_views, api_actions   # needs to stay at bottom
 
 if not app.debug:
     import logging
