@@ -6,7 +6,7 @@ $(document).ready(function () {
     }
 
     $("#exampleTable").DataTable({
-        "lengthMenu": [[2, 3, 5, -1], [2, 3, 5, "All"]],
+        "lengthMenu": [[15, 25, -1], [15, 25, "All"]],
         "processing": true,
         "serverSide": true,
         "order": [[2, "desc"]],
