@@ -16,7 +16,6 @@ def before_request():
         db.session.add(g.user)
         db.session.commit()
 
-@app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 @app.route('/index/<int:page>', methods=['GET', 'POST'])
 @login_required

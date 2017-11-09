@@ -11,7 +11,8 @@ from .models import Person, Case, PhoneLogEntry
 from .hh_forms import ClientForm, CaseForm, PhoneLogForm
 from .hh_utilities import flash
 
-
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/hh/', methods=['GET', 'POST'])
 @app.route('/hh/clients', methods=['GET', 'POST'])
 def clients():
     form = ClientForm()
