@@ -170,16 +170,19 @@
                     <form class="form-horizontal" id="phonelogForm" method="post"
                           action="{{ url_for('add_phonelog_to_case', case_name_front=case_name_front, case_name_back=case_name_back) }}">
                         {{ client_form.hidden_tag() }}
-                        <div class="form-group">
-                            <div class="col-sm-6">
+                        <div class="col-sm-4">
+                            <div class="form-group">
                                 <label for="logdate" class="control_label">Date</label>
                                 {{ phonelog_form.logdate(class="form-control") }}
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="col-sm-6">
+                        <div class="col-sm-offset-2 col-sm-4">
+                            <div class="form-group">
                                 <label for="logtime" class="control-label">Time</label>
-                                {{ phonelog_form.logtime(class="form-control") }}
+                                <div class="input-group bootstrap-timepicker timepicker">
+                                    {{ phonelog_form.logtime(class="form-control") }}
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">

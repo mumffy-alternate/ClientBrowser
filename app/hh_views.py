@@ -120,7 +120,9 @@ def add_phonelog_to_case(case_name_front=None, case_name_back=None):
         form = PhoneLogForm()
         if form.validate_on_submit():
             log_entry = PhoneLogEntry()
-            log_entry.timestamp = datetime.utcnow()
+            if form.logdate.data != None and form.logtime.data != None:
+                time_string = form.logdate.data + " " + form.logtime.data
+                log_entry.timestamp = datetime.strptime(time_string, "%Y-%m-%d %I:%M %p")
             log_entry.content = form.content.data
             log_entry.case = case
             db.session.add(log_entry)
@@ -128,5 +130,5 @@ def add_phonelog_to_case(case_name_front=None, case_name_back=None):
             flash("Phone log entry for [{0}] has been added to this case [{1}].".format(log_entry.timestamp, case.case_name))
             return redirect(url_for('case_by_name', case_name_front=case_name_front, case_name_back=case_name_back))
         else:
-            flash("Validation Errors:".format(form.errors), "error")
+            flash("Validation Errors:\n{0}".format(form.errors), "error")
             return redirect(url_for('case_by_name', case_name_front=case_name_front, case_name_back=case_name_back))

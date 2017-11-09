@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, PasswordField, TextAreaField, HiddenField, SelectField, DateTimeField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Length, Email
+from wtforms_components import TimeField
 
 from app.models import User
 
@@ -47,6 +48,6 @@ class CaseForm(FlaskForm):
         return True
 
 class PhoneLogForm(FlaskForm):
-    logdate = StringField('logdate')
-    logtime = StringField('logtime')
-    content = TextAreaField('content')
+    logdate = StringField('logdate', validators=[DataRequired()])
+    logtime = StringField('logtime', validators=[DataRequired()])
+    content = TextAreaField('content', validators=[DataRequired()])
