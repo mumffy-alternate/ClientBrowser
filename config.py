@@ -6,6 +6,7 @@ SECRET_KEY = 'blah blah blah'
 
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
+SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 MAIL_SERVER = 'localhost'
 MAIL_PORT = 25
