@@ -27,7 +27,8 @@ if not app.debug:
     mail_handler.setLevel(logging.ERROR)
     app.logger.addHandler(mail_handler)
 
-    file_handler = RotatingFileHandler('tmp/application.log', 'a', 1 * 1024 * 1024, 10)
+    log_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'tmp', 'application.log')
+    file_handler = RotatingFileHandler(log_path, 'a', 1 * 1024 * 1024, 10)
     file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
     app.logger.setLevel(logging.INFO)
     file_handler.setLevel(logging.INFO)

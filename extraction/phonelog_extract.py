@@ -1,8 +1,12 @@
 import logging
 import os
 import re
+from datetime import datetime
 
 from docx import Document
+
+from app import db
+from app.models import LegacyPhoneLog
 
 PHONELOG_CONTENT_MARKER = "PHONE LOG \(MOST RECENT ON TOP\)"
 INPUT_PATH = ur".\sample_data"
@@ -45,10 +49,18 @@ def export_phonelog(filepath, filename):
         return
 
     content = extract_phonelog(filepath)
-    if content != None:
-        log.debug('case[%s]: found the following legacy phonelog content:\n%s', case_name, content)
-    else:
+    if content == None:
         log.error("%s did not contain the content marker (%s)", filepath, PHONELOG_CONTENT_MARKER)
+        return
+
+    phonelog = LegacyPhoneLog()
+    phonelog.case_name = case_name
+    phonelog.content = content
+    phonelog.extraction_time = datetime.utcnow()
+    db.session.add(phonelog)
+    db.session.commit()  # TODO commit in a big batch, instead?
+    log.debug("added case[%s]'s legacy phone log content to the database.", case_name)
+
 
 if __name__ == "__main__":
     for root, dirs, files in os.walk(INPUT_PATH):
@@ -59,4 +71,3 @@ if __name__ == "__main__":
                 export_phonelog(filepath, filename)
             else:
                 log.debug("SKIPPING %s", filepath)
-
