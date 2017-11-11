@@ -1,4 +1,5 @@
 from sqlalchemy import select
+from sqlalchemy.orm import backref
 
 from app import db
 
@@ -152,5 +153,5 @@ class LegacyPhoneLog(db.Model):
     case_name = db.Column(db.String(255), unique=True, primary_key=True)
     content = db.Column(db.Text)
     extraction_time = db.Column(db.DateTime, nullable=False)
-    case = db.relationship("Case", primaryjoin=(Case.case_name == case_name),
-                           foreign_keys=case_name)
+    case = db.relationship('Case', primaryjoin=(Case.case_name == case_name),
+                           foreign_keys=case_name, backref=backref('legacy_phone_log', uselist=False))
