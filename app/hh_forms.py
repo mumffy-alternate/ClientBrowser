@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, PasswordField, TextAreaField, HiddenField, SelectField, DateTimeField
 from wtforms.fields.html5 import DateField
@@ -31,10 +33,10 @@ class CaseForm(FlaskForm):
 
     def __init__(self, case=None, *args, **kwargs):
         super(CaseForm, self).__init__(*args, **kwargs)
-        if case != None:
+        if case is not None:
             self.case_name.data = case.case_name
-            self.date_opened.data = case.date_opened
-            self.date_closed.data = case.date_closed
+            self.date_opened.data = case.date_opened.strftime('%Y-%m-%d') if case.date_opened else None
+            self.date_closed.data = case.date_closed.strftime('%Y-%m-%d') if case.date_closed else None
             self.court_case_number.data = case.court_case_number
 
     def validate(self):

@@ -11,6 +11,7 @@ from .models import Person, Case, PhoneLogEntry
 from .hh_forms import ClientForm, CaseForm, PhoneLogForm
 from .hh_utilities import flash
 
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/hh/', methods=['GET', 'POST'])
 @app.route('/hh/clients', methods=['GET', 'POST'])
@@ -36,6 +37,7 @@ def clients():
     clients = Person.query.all()
     return render_template('hh_clients.html', clients=clients, form=form)
 
+
 @app.route('/hh/cases/', methods=['GET', 'POST'])
 def cases(case_name_front=None, case_name_back=None):
     form = CaseForm()
@@ -54,6 +56,7 @@ def cases(case_name_front=None, case_name_back=None):
     cases = Case.query.all()
     return render_template('hh_cases.html', cases=cases, form=form)
 
+
 @app.route('/hh/cases/<case_name_front>/<case_name_back>/', methods=['GET', 'POST'])
 def case_by_name(case_name_front=None, case_name_back=None):
     if case_name_front != None and case_name_back != None:
@@ -62,8 +65,6 @@ def case_by_name(case_name_front=None, case_name_back=None):
         if case == None:
             flash("Case [{0}] was not found.".format(case_name), 'warning')
             return redirect(url_for('cases'))
-        clients = case.clients.all()
-        logs = case.phone_logs.order_by(desc(PhoneLogEntry.timestamp))
 
         form = CaseForm()
         if form.validate_on_submit():
@@ -76,14 +77,18 @@ def case_by_name(case_name_front=None, case_name_back=None):
             db.session.commit()
             flash("Case [{0}] has been updated.".format(c.case_name),
                   "success")  # TODO display which exact fields were changed and how
-            return redirect(url_for('case_by_name', case_name_front=case_name_front, case_name_back=case_name_back))
+            return redirect(url_for('case_by_name', case_name_front=c.get_name_front(), case_name_back=c.get_name_back()))
         else:
+            clients = case.clients.all()
+            logs = case.phone_logs.order_by(desc(PhoneLogEntry.timestamp))
+
             form = CaseForm(case)
             client_form = ClientForm()
             phonelog_form = PhoneLogForm()
             return render_template('specific_case.html', form=form, clients=clients, logs=logs, case_id=case.id,
                                    case_name_front=case_name_front, case_name_back=case_name_back,
                                    client_form=client_form, phonelog_form=phonelog_form)
+
 
 @app.route('/hh/add_client_to_case/<case_name_front>/<case_name_back>/', methods=['POST'])
 def add_client_to_case(case_name_front=None, case_name_back=None):
@@ -104,11 +109,13 @@ def add_client_to_case(case_name_front=None, case_name_back=None):
             db.session.add(p)
             db.session.add(case)
             db.session.commit()
-            flash("Client [{0}] has been added to this case [{1}].".format(p.first_name + " " + p.last_name, case.case_name))
+            flash("Client [{0}] has been added to this case [{1}].".format(p.first_name + " " + p.last_name,
+                                                                           case.case_name))
             return redirect(url_for('case_by_name', case_name_front=case_name_front, case_name_back=case_name_back))
         else:
             flash("Validation Errors:".format(form.errors), "error")
             return redirect(url_for('case_by_name', case_name_front=case_name_front, case_name_back=case_name_back))
+
 
 @app.route('/hh/add_phonelog_to_case/<case_name_front>/<case_name_back>/', methods=['POST'])
 def add_phonelog_to_case(case_name_front=None, case_name_back=None):
@@ -128,7 +135,8 @@ def add_phonelog_to_case(case_name_front=None, case_name_back=None):
             log_entry.case = case
             db.session.add(log_entry)
             db.session.commit()
-            flash("Phone log entry for [{0}] has been added to this case [{1}].".format(log_entry.timestamp, case.case_name))
+            flash("Phone log entry for [{0}] has been added to this case [{1}].".format(log_entry.timestamp,
+                                                                                        case.case_name))
             return redirect(url_for('case_by_name', case_name_front=case_name_front, case_name_back=case_name_back))
         else:
             flash("Validation Errors:\n{0}".format(form.errors), "error")
