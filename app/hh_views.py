@@ -1,4 +1,6 @@
 import json
+import pytz
+import tzlocal
 from datetime import datetime
 from flask import render_template, redirect, session, url_for, request, g, request
 from flask_login import login_user, logout_user, current_user, login_required
@@ -129,8 +131,10 @@ def add_phonelog_to_case(case_name_front=None, case_name_back=None):
         if form.validate_on_submit():
             log_entry = PhoneLogEntry()
             if form.logdate.data != None and form.logtime.data != None:
+                local_tz = tzlocal.get_localzone()
                 time_string = form.logdate.data + " " + form.logtime.data
-                log_entry.timestamp = datetime.strptime(time_string, "%Y-%m-%d %I:%M %p")
+                dt = local_tz.localize(datetime.strptime(time_string, "%Y-%m-%d %I:%M %p"))
+                log_entry.timestamp = dt.astimezone(pytz.utc)
             log_entry.content = form.content.data
             log_entry.case = case
             db.session.add(log_entry)

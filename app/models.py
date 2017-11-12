@@ -148,6 +148,9 @@ class PhoneLogEntry(db.Model):
     case_id = db.Column(db.Integer, db.ForeignKey('case.id'), nullable=False)
     case = db.relationship('Case', back_populates='phone_logs')
 
+    @property
+    def timestamp_local(self):
+        return None
 
 class LegacyPhoneLog(db.Model):
     case_name = db.Column(db.String(255), unique=True, primary_key=True)
