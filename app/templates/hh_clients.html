@@ -19,11 +19,11 @@
                     </button>
                 </p>
             </div>
-            <form class="form-horizontal collapse" action="" method="post" name="new-client" id="clientform">
+            <form class="form collapse" action="" method="post" name="new-client" id="clientform">
                 {{ form.hidden_tag() }}
 
-                <div class="form-group">
-                    <div class="row col-sm-12">
+                <div class="row">
+                    <div class="form-group">
                         <div class="col-sm-3">
                             <label for="first_name" class="control-label">First Name</label>
                             {{ form.first_name(maxlength=255, class="form-control") }}
@@ -39,27 +39,25 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="row col-sm-12">
-                        <div class="col-sm-6">
+                <div class="row">
+                    <div class="form-group col-xs-12 col-sm-6">
+                        <div class="">
                             <label for="address_line1" class="control-label">Address (Line 1)</label>
                             {{ form.address_line1(maxlength=255, class="form-control") }}
                         </div>
-                        <div class="col-sm-6">
+                    </div>
+                    <div class="form-group col-xs-12 col-sm-6">
+                        <div class="">
                             <label for="address_line1" class="control-label">Address (Line 2)</label>
                             {{ form.address_line2(maxlength=255, class="form-control") }}
                         </div>
                     </div>
                 </div>
-                <div class="row" style="margin-top: 5%"></div>
-                <div class="form-group">
-                    <div class="row col-sm-12">
-                        <div class="col-sm-offset-10 col-sm-2">
-                            <button type="submit" class="btn btn-default">Add Client</button>
+                <div class="row" style="margin-top: 10px">
+                        <div class="col-xs-12">
+                            <button type="submit" class="btn btn-default" style="float: right">Add Client</button>
                         </div>
-                    </div>
                 </div>
-
             </form>
         </div>
         <div class="panel-body">
