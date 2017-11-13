@@ -1,71 +1,70 @@
 {% extends 'shared/hh_base.html' %}
 
 {% block content %}
-{% include 'shared/hh_flash.html' %}
+    {% include 'shared/hh_flash.html' %}
 
-<h1>Case Browser</h1>
-<div class="well col-xs-12">
-    <div class="row">
-        <p>
-            <button class="btn btn-default col-sm-offset-5 col-sm-2" type="button" data-toggle="collapse" data-target="#caseform">New Case</button>
-        </p>
-    </div>
-    <form class="form-horizontal collapse {% if form.errors %} in{% endif %}" action="" method="post" name="new-client" id="caseform">
-        {{ form.hidden_tag() }}
+    <h1>Case Browser</h1>
+    <div class="well col-xs-12">
+        <div class="row">
+            <p>
+                <button class="btn btn-default col-sm-offset-5 col-sm-2" type="button" data-toggle="collapse"
+                        data-target="#caseform">New Case
+                </button>
+            </p>
+        </div>
+        <form class="form collapse {% if form.errors %} in{% endif %}" action="" method="post" name="new-client"
+              id="caseform" style="margin-top: 20px">
+            {{ form.hidden_tag() }}
 
-        <div class="form-group">
-            <div class="row col-sm-12">
-                <div class="col-sm-6">
+            <div class="row">
+                <div class="form-group col-sm-6">
                     <div class="form-group{% if form.case_name.errors %} has-error{% endif %}">
-                    <label for="case_name" class="control-label">Case Name</label>
-                    {{ form.case_name(maxlength=255, class="form-control") }}
-                    {% for error in form.case_name.errors %}
-                        <span class="help-block">{{ error }}</span>
-                    {% endfor %}
+                        <label for="case_name" class="control-label">Case Name</label>
+                        {{ form.case_name(maxlength=255, class="form-control") }}
+                        {% for error in form.case_name.errors %}
+                            <span class="help-block">{{ error }}</span>
+                        {% endfor %}
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="form-group col-sm-6">
                     <label for="court_case_number" class="control-label">Court Case Number</label>
                     {{ form.court_case_number(maxlength=255, class="form-control") }}
                 </div>
             </div>
-        </div>
-       <div class="form-group">
-            <div class="row col-sm-12">
+            <div class="row">
                 <div class="col-sm-3">
-                    <label for="date_opened" class="control-label">Date Opened</label>
-                    {{ form.date_opened(class="form-control") }}
+                    <div class="form-group">
+                        <label for="date_opened" class="control-label">Date Opened</label>
+                        {{ form.date_opened(class="form-control") }}
+                    </div>
                 </div>
-                <div class="col-sm-offset-3 col-sm-3">
-                    <label for="date_closed" class="control-label">Date Closed</label>
-                    {{ form.date_closed(class="form-control") }}
-                </div>
-            </div>
-       </div>
-        <div class="row" style="margin-top: 5%"></div>
-        <div class="form-group">
-            <div class="row col-sm-12">
-                <div class="col-sm-offset-10 col-sm-2">
-                    <button type="submit" class="btn btn-default">Add Case</button>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label for="date_closed" class="control-label">Date Closed</label>
+                        {{ form.date_closed(class="form-control") }}
+                    </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <button id="submitBtn" type="submit" class="btn btn-default" style="float: right">Add Case</button>
+                </div>
+            </div>
+        </form>
+    </div> <!-- well -->
+
+    {% for case in cases %}
+        <div>
+            <p>
+                <a href="{{ url_for('case_by_name', case_name_front=case.get_name_front(), case_name_back=case.get_name_back()) }}">
+                    {{ case.case_name }}
+                </a>
+            </p>
         </div>
-
-    </form>
-</div> <!-- well -->
-
-{% for case in cases %}
-    <div>
-        <p>
-            <a href="{{ url_for('case_by_name', case_name_front=case.get_name_front(), case_name_back=case.get_name_back()) }}">
-                {{ case.case_name }}
-            </a>
-        </p>
-    </div>
-{% endfor %}
+    {% endfor %}
 
 {% endblock %}
 
 {% block footer_scripts %}
-<script src="{{ url_for('static', filename='js/cases.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/cases.js') }}"></script>
 {% endblock %}
