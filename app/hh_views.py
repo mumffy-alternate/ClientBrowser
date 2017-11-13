@@ -1,4 +1,3 @@
-import json
 import pytz
 import tzlocal
 from datetime import datetime

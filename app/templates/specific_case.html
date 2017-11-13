@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block head_content %}
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
     <script type="text/javascript">
         var caseId = {{ case_id }};
     </script>
@@ -126,8 +127,8 @@
                     {% else %}
                         {% for log in logs %}
                             <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    {{ log.timestamp }}
+                                <div class="panel-heading" style="font-family: monospace">
+                                    {{ log.timestamp_local }}
                                 </div>
                                 <div class="panel-body">
                                     <p style="white-space: pre-wrap">{{ log.content }}</p>

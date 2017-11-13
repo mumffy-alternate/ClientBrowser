@@ -1,3 +1,5 @@
+import pytz
+import tzlocal
 from sqlalchemy import select
 from sqlalchemy.orm import backref
 
@@ -150,7 +152,10 @@ class PhoneLogEntry(db.Model):
 
     @property
     def timestamp_local(self):
-        return None
+        local_tz = tzlocal.get_localzone()
+        dt_utc = self.timestamp.replace(tzinfo=pytz.utc)
+        dt_local = dt_utc.astimezone(local_tz)
+        return dt_local.strftime('%b. %d, %Y (%a) at %I:%M %p')
 
 class LegacyPhoneLog(db.Model):
     case_name = db.Column(db.String(255), unique=True, primary_key=True)
