@@ -102,10 +102,16 @@ class Case(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     date_opened = db.Column(db.DateTime)
     date_closed = db.Column(db.DateTime)
+    date_updated = db.Column(db.DateTime)
     case_name = db.Column(db.String(255), unique=True)
     court_case_number = db.Column(db.String(255))
+    court_name = db.Column(db.String(255))
     clients = db.relationship('Person', back_populates='case', lazy='dynamic')
     phone_logs = db.relation('PhoneLogEntry', back_populates='case', lazy='dynamic')
+    case_status_id = db.Column(db.Integer, db.ForeignKey('case_status.id'))
+    case_status = db.relationship('CaseStatus', back_populates='cases')
+    # issues # TODO break this out into the Legal Constraints
+    notes = db.Column(db.Text)
 
     def get_name_front(self):
         return str(self.case_name).split('/')[0]
@@ -113,6 +119,10 @@ class Case(db.Model):
     def get_name_back(self):
         return str(self.case_name).split('/')[1]
 
+class CaseStatus(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    description = db.Column(db.String(255))
+    cases = db.relationship('Case', back_populates='case_status')
 
 class Person(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -124,6 +134,7 @@ class Person(db.Model):
     address_state = db.Column(db.String(2))
     address_postal_code = db.Column(db.String(30))
     address_country = db.Column(db.String(3))
+    phone_number = db.Column(db.String(28))
     birthdate = db.Column(db.DateTime)
     sex = db.Column(db.String(15))  # TODO change to FK or something
     case_id = db.Column(db.Integer, db.ForeignKey('case.id'))
@@ -132,6 +143,7 @@ class Person(db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
     role = db.relationship('Role', back_populates='people')
     role_comment = db.Column(db.String(127))
+    notes = db.Column(db.Text)
 
 
 class Role(db.Model):
