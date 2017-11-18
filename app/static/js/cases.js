@@ -1,4 +1,5 @@
-$(function() {
-     $( "#date_opened" ).datepicker({ dateFormat: 'yy-mm-dd'});
-     $( "#date_closed" ).datepicker({ dateFormat: 'yy-mm-dd'});
+$(function () {
+    $("#date_opened").datepicker({dateFormat: 'yy-mm-dd'});
+    $("#date_closed").datepicker({dateFormat: 'yy-mm-dd'});
+    $("#date_updated").datepicker({dateFormat: 'yy-mm-dd'});
 });

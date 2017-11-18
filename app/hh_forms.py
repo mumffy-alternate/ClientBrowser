@@ -26,10 +26,13 @@ class ClientForm(FlaskForm):
 
 
 class CaseForm(FlaskForm):
+    case_name = StringField('case_name', validators=[Length(2, 255), DataRequired()])
     date_opened = StringField('date_opened')
     date_closed = StringField('date_closed')
-    case_name = StringField('case_name', validators=[Length(2, 255), DataRequired()])
+    date_updated = StringField('date_updated')
     court_case_number = StringField('court_case_number', validators=[Length(max=255)])
+    court_name = StringField('court_name', validators=[Length(max=255)])
+    notes = TextAreaField('notes')
 
     def __init__(self, case=None, *args, **kwargs):
         super(CaseForm, self).__init__(*args, **kwargs)
@@ -37,7 +40,10 @@ class CaseForm(FlaskForm):
             self.case_name.data = case.case_name
             self.date_opened.data = case.date_opened.strftime('%Y-%m-%d') if case.date_opened else None
             self.date_closed.data = case.date_closed.strftime('%Y-%m-%d') if case.date_closed else None
+            self.date_updated.data = case.date_updated.strftime('%Y-%m-%d') if case.date_updated else None
             self.court_case_number.data = case.court_case_number
+            self.court_name.data = case.court_name
+            self.notes.data = case.notes
 
     def validate(self):
         if not FlaskForm.validate(self):

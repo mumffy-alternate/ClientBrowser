@@ -46,8 +46,11 @@ def cases(case_name_front=None, case_name_back=None):
         c = Case()
         c.date_opened = datetime.strptime(form.date_opened.data, '%Y-%m-%d') if form.date_opened.data else None
         c.date_closed = datetime.strptime(form.date_closed.data, '%Y-%m-%d') if form.date_closed.data else None
+        c.date_updated = datetime.strptime(form.date_updated.data, '%Y-%m-%d') if form.date_updated.data else None
         c.case_name = form.case_name.data
         c.court_case_number = form.court_case_number.data
+        c.court_name = form.court_name.data
+        c.notes = form.notes.data
         db.session.add(c)
         db.session.commit()
         flash("Case [{0}] has been added.".format(c.case_name))
@@ -72,8 +75,11 @@ def case_by_name(case_name_front=None, case_name_back=None):
             c = case
             c.date_opened = datetime.strptime(form.date_opened.data, '%Y-%m-%d') if form.date_opened.data else None
             c.date_closed = datetime.strptime(form.date_closed.data, '%Y-%m-%d') if form.date_closed.data else None
+            c.date_updated = datetime.strptime(form.date_updated.data, '%Y-%m-%d') if form.date_updated.data else None
             c.case_name = form.case_name.data
             c.court_case_number = form.court_case_number.data
+            c.court_name = form.court_name.data
+            c.notes = form.notes.data
             db.session.add(c)
             db.session.commit()
             flash("Case [{0}] has been updated.".format(c.case_name),
