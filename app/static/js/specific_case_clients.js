@@ -14,6 +14,7 @@ $(document).ready(function () {
     $("#date_opened").datepicker({dateFormat: 'yy-mm-dd'});
     $("#date_closed").datepicker({dateFormat: 'yy-mm-dd'});
     $("#date_updated").datepicker({dateFormat: 'yy-mm-dd'});
+    $("#birthdate").datepicker({dateFormat: 'yy-mm-dd', changeMonth: true, changeYear: true, minDate: "-100Y", maxDate:0, yearRange:"-100:+0"});
     $("#logdate").datepicker({dateFormat: 'yy-mm-dd'});
 
     $("#logdate").on('click', function (e) {
