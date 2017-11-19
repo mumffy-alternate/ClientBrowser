@@ -8,7 +8,7 @@ from sqlalchemy import desc
 from app import app, db, lm
 from config import POSTS_PER_PAGE
 from .forms import LoginForm, ProfileForm, PostForm
-from .models import Person, Case, PhoneLogEntry
+from .models import Person, Case, PhoneLogEntry, CaseStatus
 from .hh_forms import ClientForm, CaseForm, PhoneLogForm
 from .hh_utilities import flash
 
@@ -51,6 +51,7 @@ def cases(case_name_front=None, case_name_back=None):
         c.court_case_number = form.court_case_number.data
         c.court_name = form.court_name.data
         c.notes = form.notes.data
+        c.case_status = CaseStatus.query.filter_by(description="Phone Screen (1st party)").first()
         db.session.add(c)
         db.session.commit()
         flash("Case [{0}] has been added.".format(c.case_name))
