@@ -49,14 +49,14 @@
                     <div class="row">
                          <div class="col-sm-4">
                             <div class="form-group">
-                                <label for="address_line2" class="control_label">Role</label>
-                                {{ client_form.address_line2(maxlength=255, class="form-control") }}
+                                <label for="role_short_name" class="control_label">Role</label>
+                                {{ client_form.role_short_name(maxlength=127, class="form-control") }}
                             </div>
                         </div>
                         <div class="col-sm-8">
                             <div class="form-group">
-                                <label for="address_city" class="control_label">Role Comment</label>
-                                {{ client_form.address_city(maxlength=255, class="form-control", placeholder="optional") }}
+                                <label for="role_comment" class="control_label">Role Comment</label>
+                                {{ client_form.role_comment(maxlength=127, class="form-control", placeholder="optional") }}
                             </div>
                         </div>
                     </div>
@@ -86,20 +86,20 @@
                     <div class="row">
                         <div class="col-sm-2">
                             <div class="form-group">
-                                <label for="address_line2" class="control_label">State</label>
-                                {{ client_form.address_line2(maxlength=2, class="form-control") }}
+                                <label for="address_state" class="control_label">State</label>
+                                {{ client_form.address_state(maxlength=2, class="form-control") }}
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
-                                <label for="address_city" class="control_label">Postal Code</label>
-                                {{ client_form.address_city(maxlength=30, class="form-control") }}
+                                <label for="address_postal_code" class="control_label">Postal Code</label>
+                                {{ client_form.address_postal_code(maxlength=30, class="form-control") }}
                             </div>
                         </div>
                         <div class="col-sm-offset-3 col-sm-2">
                             <div class="form-group">
-                                <label for="address_city" class="control_label">Country</label>
-                                {{ client_form.address_city(maxlength=3, class="form-control") }}
+                                <label for="address_country" class="control_label">Country</label>
+                                {{ client_form.address_country(maxlength=3, class="form-control") }}
                             </div>
                         </div>
                     </div>

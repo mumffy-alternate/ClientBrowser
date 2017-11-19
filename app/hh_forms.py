@@ -22,7 +22,7 @@ class ClientForm(FlaskForm):
     birthdate = StringField('birthdate')
     sex = StringField('sex', validators=[Length(max=15)])
     # case_id = StringField
-    # role_id = SelectField('rold_id')
+    role_short_name = StringField('role_short_name', validators=[Length(max=127)])
     role_comment = StringField('role_comment', validators=[Length(max=127)])
 
 

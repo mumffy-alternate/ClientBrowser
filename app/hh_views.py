@@ -8,7 +8,7 @@ from sqlalchemy import desc
 from app import app, db, lm
 from config import POSTS_PER_PAGE
 from .forms import LoginForm, ProfileForm, PostForm
-from .models import Person, Case, PhoneLogEntry, CaseStatus
+from .models import Person, Case, PhoneLogEntry, CaseStatus, Role
 from .hh_forms import ClientForm, CaseForm, PhoneLogForm
 from .hh_utilities import flash
 
@@ -113,6 +113,18 @@ def add_client_to_case(case_name_front=None, case_name_back=None):
             p = Person()
             p.first_name = form.first_name.data
             p.last_name = form.last_name.data
+            p.address_line1 = form.address_line1.data
+            p.address_line2 = form.address_line2.data
+            p.address_city = form.address_city.data
+            p.address_state = form.address_state.data
+            p.address_postal_code = form.address_postal_code.data
+            p.address_country = form.address_country.data
+            p.phone_number = form.phone_number.data
+            p.birthdate = datetime.strptime(form.birthdate.data, '%Y-%m-%d') if form.birthdate.data else None
+            p.sex = form.sex.data
+            p.role = Role.query.filter_by(short_name=form.role_short_name.data.upper()).first()
+            p.role_comment = form.role_comment.data
+
             case.clients.append(p)
             db.session.add(p)
             db.session.add(case)
