@@ -98,14 +98,16 @@ def get_cases_json():
     sort_column_name = request.args['columns[{0}][data]'.format(sort_column_number)]
     sort_column_allowed = bool(request.args['columns[{0}][orderable]'.format(sort_column_number)])
     sort_columns = {
-        "case_name": "case.case_name"
     }
     sort_column = None
+    if sort_column_allowed:
+        sort_column = sort_columns[sort_column_name] if sort_column_name in sort_columns.keys() else sort_column_name
 
     page_number = (start / page_length) + 1
 
     cases, total_case_count, count_after_filter = \
-        get_cases(offset=page_number, limit=page_length)
+        get_cases(offset=page_number, limit=page_length, do_sort=sort_column_allowed, sort_column=sort_column,
+                  sort_direction=sort_column_direction)
 
     data = []
     for case in cases:
@@ -128,11 +130,17 @@ def get_cases_json():
     return json.dumps(result)
 
 
-def get_cases(offset, limit):
+def get_cases(offset, limit, do_sort, sort_column, sort_direction):
     cases = Case.query
 
     total_case_count = Case.query.count()
     count_after_filter = cases.count()
+
+    if do_sort:
+        if(sort_direction == 'desc'):
+            cases = cases.order_by(desc(sort_column))
+        else:
+            cases = cases.order_by(sort_column)
 
     cases = cases.paginate(offset, limit, False).items
 

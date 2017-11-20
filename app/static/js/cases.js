@@ -3,11 +3,11 @@ $(document).ready(function () {
         "lengthMenu": [[15, 25, 50], [15, 25, 50]],
         "processing": true,
         "serverSide": true,
-        "order": [[1, "asc"]],
+        "order": [[0, "asc"]],
         "ajax": "/api/table/cases",
         "columns": [
             {"data": "case_name"},
-            {"data": "case_status"},
+            {"data": "case_status", "orderable": false},
             {"data": "court_name"},
             {"data": "court_case_number"},
             {"data": "date_opened"},
