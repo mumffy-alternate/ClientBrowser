@@ -12,9 +12,16 @@ from .models import Person, Case, PhoneLogEntry
 def get_clients_by_caseid(case_id):
     return get_people_json(case_id)
 
+
 @app.route('/api/table/clients')
 def get_clients():
     return get_people_json()
+
+
+@app.route('/api/table/cases')
+def get_cases():
+    return get_cases_json()
+
 
 def get_people_json(case_id=None):
     draw = request.args['draw']
@@ -58,6 +65,7 @@ def get_people_json(case_id=None):
     }
     return json.dumps(result)
 
+
 def get_people(offset, limit, do_sort, sort_column, sort_direction, case_id=None, query_like=None):
     people = Person.query.filter((Person.first_name.like(query_like)) | (Person.last_name.like(query_like)))
 
@@ -76,3 +84,56 @@ def get_people(offset, limit, do_sort, sort_column, sort_direction, case_id=None
     people = people.paginate(offset, limit, False).items
 
     return people, total_people_count, count_after_filter
+
+
+def get_cases_json():
+    draw = request.args['draw']
+    start = int(request.args['start'])
+    page_length = int(request.args['length'])
+    query = request.args['search[value]']
+    is_regex = bool(request.args['search[regex]'])
+
+    sort_column_number = int(request.args['order[0][column]'])
+    sort_column_direction = request.args['order[0][dir]']
+    sort_column_name = request.args['columns[{0}][data]'.format(sort_column_number)]
+    sort_column_allowed = bool(request.args['columns[{0}][orderable]'.format(sort_column_number)])
+    sort_columns = {
+        "case_name": "case.case_name"
+    }
+    sort_column = None
+
+    page_number = (start / page_length) + 1
+
+    cases, total_case_count, count_after_filter = \
+        get_cases(offset=page_number, limit=page_length)
+
+    data = []
+    for case in cases:
+        item = {}
+        item['case_name'] = '<a href="/hh/cases/' + case.case_name + '">' + case.case_name + '</a>'
+        item['case_status'] = case.case_status.description
+        item['court_name'] = case.court_name
+        item['court_case_number'] = case.court_case_number
+        item['date_opened'] =  case.date_opened.strftime('%Y-%m-%d') if case.date_opened else None
+        item['date_updated'] = case.date_updated.strftime('%Y-%m-%d') if case.date_updated else None
+        item['date_closed'] = case.date_closed.strftime('%Y-%m-%d') if case.date_closed else None
+        data.append(item)
+
+    result = {
+        "draw": draw,
+        "recordsTotal": total_case_count,
+        "recordsFiltered": count_after_filter,
+        "data": data
+    }
+    return json.dumps(result)
+
+
+def get_cases(offset, limit):
+    cases = Case.query
+
+    total_case_count = Case.query.count()
+    count_after_filter = cases.count()
+
+    cases = cases.paginate(offset, limit, False).items
+
+    return cases, total_case_count, count_after_filter
